@@ -1,47 +1,56 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Pago con Tarjeta</title>
-  </head>
-  <body>
-    <h1>Pago con Tarjeta</h1>
-    <form>
-      <label for="numero_tarjeta">Número de Tarjeta:</label>
-      <input type="text" id="numero_tarjeta" name="numero_tarjeta" required>
+<head>
+	<!-- Incluir Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- Incluir archivo JS -->
+	<script src="nombre-archivo.js"></script>
+	<title>Formulario de pago de tarjeta de crédito</title>
+	<script>
+		function calcularCostoAdicional() {
+			// Obtener el monto ingresado por el usuario
+			var monto = document.getElementById("monto").value;
 
-      <label for="fecha_pago">Fecha de Pago:</label>
-      <input type="date" id="fecha_pago" name="fecha_pago" required>
+			// Calcular el costo adicional del 0.05%
+			var costo_adicional = monto * 0.05 / 100;
 
-      <label for="monto">Monto:</label>
-      <input type="number" id="monto" name="monto" required>
+			// Mostrar el costo adicional en el campo correspondiente
+			document.getElementById("costo_adicional").value = costo_adicional.toFixed(2);
+		}
 
-      <label for="monto_con_mora">Monto con Mora:</label>
-      <input type="text" id="monto_con_mora" name="monto_con_mora" readonly>
+		function calcularTotal() {
+			// Obtener el monto y el costo adicional
+			var monto = parseFloat(document.getElementById("monto").value);
+			var costo_adicional = parseFloat(document.getElementById("costo_adicional").value);
 
-      <input type="button" value="Calcular Mora" onclick="calcularMora()">
-    </form>
+			// Calcular la suma
+			var total = monto + costo_adicional;
 
-    <script>
-      function calcularMora() {
-        const monto = parseFloat(document.getElementById("monto").value);
-        const diasAtraso = calcularDiasAtraso();
-        const mora = (monto * 0.05 * diasAtraso).toFixed(2);
-        const montoConMora = (monto + parseFloat(mora)).toFixed(2);
-        document.getElementById("monto_con_mora").value = montoConMora;
-      }
+			// Mostrar el total en el campo correspondiente
+			document.getElementById("total").value = total.toFixed(2);
+		}
+	</script>
+</head>
+<body>
+	<h1>Ingrese su información de pago</h1>
+	<form>
+		<label for="numero_tarjeta">Número de tarjeta:</label>
+		<input type="text" id="numero_tarjeta" name="numero_tarjeta" required><br><br>
+		
+		<label for="fecha_vencimiento">Fecha de vencimiento:</label>
+		<input type="date" id="fecha_vencimiento" name="fecha_vencimiento" required><br><br>
 
-      function calcularDiasAtraso() {
-        const fechaPago = new Date(document.getElementById("fecha_pago").value);
-        const hoy = new Date();
-        const unDiaEnMs = 1000 * 60 * 60 * 24;
-        const diasAtraso = Math.max(Math.round((hoy - fechaPago) / unDiaEnMs), 0);
-        return diasAtraso;
-      }
-    </script>
-  </body>
+		<label for="monto">Monto a pagar:</label>
+		<input type="number" id="monto" name="monto" required onchange="calcularCostoAdicional()"><br><br>
+
+		<label for="costo_adicional">Costo adicional del 0.05%:</label>
+		<input type="number" id="costo_adicional" name="costo_adicional" readonly><br><br>
+
+		<label for="total">Total a pagar:</label>
+		<input type="number" id="total" name="total" readonly><br><br>
+		
+		<input type="button" value="Enviar" onclick="calcularTotal()">
+	</form>
+</body>
 </html>

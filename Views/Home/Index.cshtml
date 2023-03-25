@@ -1,30 +1,27 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-	<!-- Incluir Bootstrap -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<!-- Incluir archivo JS -->
-	<script src="nombre-archivo.js"></script>
 	<title>Formulario de pago de tarjeta de crédito</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Enlace a Bootstrap -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<!-- Script para calcular el costo adicional y total -->
 	<script>
 		function calcularCostoAdicional() {
 			// Obtener el monto ingresado por el usuario
-			var monto = document.getElementById("monto").value;
+			var monto = parseFloat(document.getElementById("monto").value);
 
-			// Calcular el costo adicional del 0.05%
-			var costo_adicional = monto * 0.05 / 100;
+			// Calcular el costo adicional del 0.05% por día de retraso en el pago
+			var fecha_vencimiento = new Date(document.getElementById("fecha_vencimiento").value);
+			var hoy = new Date();
+			var dias_retraso = Math.floor((hoy - fecha_vencimiento) / (1000 * 60 * 60 * 24));
+			var costo_adicional = dias_retraso > 0 ? monto * (dias_retraso * 0.05) / 100 : 0;
 
 			// Mostrar el costo adicional en el campo correspondiente
 			document.getElementById("costo_adicional").value = costo_adicional.toFixed(2);
-		}
 
-		function calcularTotal() {
-			// Obtener el monto y el costo adicional
-			var monto = parseFloat(document.getElementById("monto").value);
-			var costo_adicional = parseFloat(document.getElementById("costo_adicional").value);
-
-			// Calcular la suma
+			// Calcular el total
 			var total = monto + costo_adicional;
 
 			// Mostrar el total en el campo correspondiente
@@ -33,24 +30,36 @@
 	</script>
 </head>
 <body>
-	<h1>Ingrese su información de pago</h1>
-	<form>
-		<label for="numero_tarjeta">Número de tarjeta:</label>
-		<input type="text" id="numero_tarjeta" name="numero_tarjeta" required><br><br>
-		
-		<label for="fecha_vencimiento">Fecha de vencimiento:</label>
-		<input type="date" id="fecha_vencimiento" name="fecha_vencimiento" required><br><br>
+	<div class="container">
+		<h1>Ingrese su información de pago</h1>
+		<form>
+			<div class="form-group">
+				<label for="numero_tarjeta">Número de tarjeta:</label>
+				<input type="text" id="numero_tarjeta" name="numero_tarjeta" class="form-control" required>
+			</div>
 
-		<label for="monto">Monto a pagar:</label>
-		<input type="number" id="monto" name="monto" required onchange="calcularCostoAdicional()"><br><br>
+			<div class="form-group">
+				<label for="fecha_vencimiento">Fecha de vencimiento:</label>
+				<input type="date" id="fecha_vencimiento" name="fecha_vencimiento" class="form-control" required onchange="calcularCostoAdicional()">
+			</div>
 
-		<label for="costo_adicional">Costo adicional del 0.05%:</label>
-		<input type="number" id="costo_adicional" name="costo_adicional" readonly><br><br>
+			<div class="form-group">
+				<label for="monto">Monto a pagar:</label>
+				<input type="number" id="monto" name="monto" class="form-control" required onchange="calcularCostoAdicional()">
+			</div>
 
-		<label for="total">Total a pagar:</label>
-		<input type="number" id="total" name="total" readonly><br><br>
-		
-		<input type="button" value="Enviar" onclick="calcularTotal()">
-	</form>
+			<div class="form-group">
+				<label for="costo_adicional">Costo adicional:</label>
+				<input type="number" id="costo_adicional" name="costo_adicional" class="form-control" readonly>
+			</div>
+
+			<div class="form-group">
+				<label for="total">Total a pagar:</label>
+				<input type="number" id="total" name="total" class="form-control" readonly>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Enviar</button>
+		</form>
+	</div>
 </body>
 </html>

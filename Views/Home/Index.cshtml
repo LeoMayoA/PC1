@@ -16,7 +16,7 @@
 			var fecha_vencimiento = new Date(document.getElementById("fecha_vencimiento").value);
 			var hoy = new Date();
 			var dias_retraso = Math.floor((hoy - fecha_vencimiento) / (1000 * 60 * 60 * 24));
-			var costo_adicional = dias_retraso > 0 ? monto * (dias_retraso * 0.05) / 100 : 0;
+			var costo_adicional = dias_retraso > 0 ? monto * (dias_retraso * 0.005) / 100 : 0;
 
 			// Mostrar el costo adicional en el campo correspondiente
 			document.getElementById("costo_adicional").value = costo_adicional.toFixed(2);
